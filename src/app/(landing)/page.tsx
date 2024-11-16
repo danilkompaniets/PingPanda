@@ -11,7 +11,7 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import SyntaxHighlighter from "react-syntax-highlighter/dist/cjs/light"
 import { Icons } from "@/components/icons"
 
-const Page = () => {
+const Page = async () => {
   const codeSnippet = `await fetch("http://localhost:3000/api/v1/events", {
   method: "POST",
   body: JSON.stringify({

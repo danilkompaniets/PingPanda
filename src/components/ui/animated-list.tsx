@@ -18,7 +18,6 @@ export const AnimatedList = React.memo(
       const interval = setInterval(() => {
         if (messages.length < childrenArray.length) {
           setMessages((prev) => [childrenArray[messages.length], ...prev])
-          console.log(childrenArray)
         } else {
           clearInterval(interval)
         }
