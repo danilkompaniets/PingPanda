@@ -4,11 +4,12 @@ import { redirect } from "next/navigation"
 import { db } from "@/db"
 import DashboardPage from "@/components/DashboardPage"
 import DashboardPageContent from "@/app/dashboard/DashboardPageContent"
+import CreateEventCategoryModal from "@/components/CreateEventCategoryModal"
+import { Button } from "@/components/ui/button"
+import { PlusIcon } from "lucide-react"
 
 const Page = async () => {
   const auth = await currentUser()
-
-  console.log(auth)
 
   if (!auth) {
     redirect("/sign-in")
@@ -26,7 +27,14 @@ const Page = async () => {
 
   return (
     <div>
-      <DashboardPage title={"asdasd"}>
+      <DashboardPage cta={
+        <CreateEventCategoryModal>
+          <Button className={"flex items-center"}>
+            <PlusIcon className={"mr-1 size-4"} />
+            Add Category
+          </Button>
+        </CreateEventCategoryModal>
+      } title={"asdasd"}>
         <DashboardPageContent />
       </DashboardPage>
     </div>

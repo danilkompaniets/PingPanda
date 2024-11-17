@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { client } from "@/lib/client"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { format, formatDistanceToNow } from "date-fns"
@@ -12,12 +12,24 @@ import Modal from "@/app/dashboard/Modal"
 
 const DashboardPageContent = () => {
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
+  const queryClient = useQueryClient()
+  const { mutate: deleteCategory, isPending: isDeletingCategory } = useMutation({
+    mutationFn: async (name: string) => {
+      await client.category.deleteCategory.$post({ name })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user-event-categories"],
+      })
+      setDeletingCategory(null)
+    },
+  })
   const { data: categories, isPending: isEventCategoriesPending } = useQuery({
     queryKey: ["user-event-categories"],
     queryFn: async () => {
       const res = await client.category.getEventCategories.$get()
       const { categories } = await res.json()
-      return await categories
+      return categories
     }
   })
 
@@ -99,10 +111,15 @@ const DashboardPageContent = () => {
                   <Trash2 className={"size-5"} />
                 </Button>
 
-                <Modal deletingCategory={deletingCategory} setDeletingCategory={() => setDeletingCategory(null)}>
+                <Modal isOpen={!!deletingCategory} closeFn={() => setDeletingCategory(null)}>
                   <div className={"flex gap-x-2 mt-2"}>
-                    <Button variant={"destructive"}>
-                      Yes, i'm sure
+                    <Button variant={"destructive"}
+                            disabled={isDeletingCategory}
+                            onClick={() => {
+                              deletingCategory && deleteCategory(deletingCategory)
+                              setDeletingCategory(null)
+                            }}>
+                      {isDeletingCategory ? (<LoadingSpinner />) : (<p>Yes, i'm sure</p>)}
                     </Button>
                     <Button variant={"outline"} onClick={() => setDeletingCategory(null)}>
                       No, go back
