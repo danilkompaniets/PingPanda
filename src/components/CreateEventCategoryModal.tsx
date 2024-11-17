@@ -75,7 +75,7 @@ const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <div onClick={() => setIsOpen(true)}>
+      <div className={"w-full"} onClick={() => setIsOpen(true)}>
         {children}
       </div>
       <Modal isOpen={isOpen} closeFn={() => setIsOpen(false)}>
@@ -153,12 +153,12 @@ const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
             )}
           </div>
 
-          <div className={"flex justify-end space-x-3 pt-4 border-t"}>
+          <div className={"flex w-full justify-end space-x-3 pt-4 border-t"}>
             <Button type={"button"} variant={"outline"} onClick={() => setIsOpen(false)}>
               Cancel
             </Button>
             <Button type={"submit"} disabled={isCreatingCategory}>
-              {isCreatingCategory ? (<LoadingSpinner className={"size-3"} />) : (<p>Create category</p>)}
+              {isCreatingCategory ? (<LoadingSpinner className={"size-3 w-[100px]"} />) : (<p>Create category</p>)}
             </Button>
           </div>
         </form>

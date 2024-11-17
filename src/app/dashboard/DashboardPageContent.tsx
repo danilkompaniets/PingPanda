@@ -9,6 +9,7 @@ import { ArrowRight, BarChart2, Clock, Database, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { Button, buttonVariants } from "@/components/ui/button"
 import Modal from "@/app/dashboard/Modal"
+import DashboardEmptyState from "@/app/dashboard/DashboardEmptyState"
 
 const DashboardPageContent = () => {
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
@@ -43,8 +44,8 @@ const DashboardPageContent = () => {
 
   if (!categories || categories.length === 0) {
     return (
-      <div className={"flex items-center justify-center"}>
-
+      <div className={"flex h-[100%] items-center justify-center"}>
+        <DashboardEmptyState />
       </div>
     )
   }
@@ -58,17 +59,21 @@ const DashboardPageContent = () => {
             <div
               className={"pointer-events-none z-0  absolute inset-px rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5"} />
             <div className={"relative p-6 z-10"}>
-              <div className={"size-12 rounded-full"}
-                   style={{
-                     backgroundColor: category.color
-                       ? `#${category.color.toString(16).padStart(6, "0")}`
-                       : "#f3f4f6",
-                   }} />
-              <div>
-                <h3 className={"text-lg/7 font-medium tracking-tight text-gray-950"}>
-                  {category.emoji || "📂"}
+              <div className={"flex gap-x-2 items-center"}>
+                <div className={"size-12 text-xl flex items-center justify-center rounded-full"}
+                     style={{
+                       backgroundColor: category.color
+                         ? `#${category.color.toString(16).padStart(6, "0")}`
+                         : "#f3f4f6",
+                     }}>
+                  {category.emoji}
+                </div>
+                <h3 className={"text-xl/7"}>
+                  {category.name}
                 </h3>
-                <p className={"text-sm/6 text-gray-600"}>
+              </div>
+              <div>
+                <p className={"text-sm/6 mt-2 text-gray-600"}>
                   {format(category.createdAt, "MMM d, yyyy")}
                 </p>
               </div>
@@ -110,28 +115,28 @@ const DashboardPageContent = () => {
                         onClick={() => setDeletingCategory(category.name)}>
                   <Trash2 className={"size-5"} />
                 </Button>
-
-                <Modal isOpen={!!deletingCategory} closeFn={() => setDeletingCategory(null)}>
-                  <div className={"flex gap-x-2 mt-2"}>
-                    <Button variant={"destructive"}
-                            disabled={isDeletingCategory}
-                            onClick={() => {
-                              deletingCategory && deleteCategory(deletingCategory)
-                              setDeletingCategory(null)
-                            }}>
-                      {isDeletingCategory ? (<LoadingSpinner />) : (<p>Yes, i'm sure</p>)}
-                    </Button>
-                    <Button variant={"outline"} onClick={() => setDeletingCategory(null)}>
-                      No, go back
-                    </Button>
-                  </div>
-                </Modal>
               </div>
             </div>
           </li>
         ))}
       </ul>
+      <Modal isOpen={deletingCategory !== null} closeFn={() => setDeletingCategory(null)}>
+        <h2 className={"mt-0 text-gray-950 "}>
+          Are you sure you want to delete {deletingCategory} category?
+        </h2>
+        <div className={"flex gap-x-2 mt-2"}>
+          <Button onClick={() => {
+            deletingCategory && deleteCategory(deletingCategory)
+            setDeletingCategory(null)
+          }} variant={"destructive"}>
+            Delete
+          </Button>
+          <Button variant={"outline"} onClick={() => setDeletingCategory(null)}>
+            Cancel
+          </Button>
 
+        </div>
+      </Modal>
     </>
   )
 }
