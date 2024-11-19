@@ -26,6 +26,9 @@ const Page = async ({ params }: PageProps) => {
     },
   })
 
+  if (!user) notFound()
+
+
   const category = await db.eventCategory.findUnique({
     where: {
       name_userId: {
