@@ -45,7 +45,7 @@ model EventCategory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Events Event[]
+  events Event[]
 
   @@unique([name, userId])
 }
