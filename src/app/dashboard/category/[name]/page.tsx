@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
 import DashboardPage from "@/components/DashboardPage"
-import EmptyCategoryState from "@/app/dashboard/category/[name]/EmptyCategoryState"
+import { CategoryPageContent } from "@/app/dashboard/category/[name]/CategoryPageContent"
 
 interface PageProps {
   params: {
@@ -53,7 +53,7 @@ const Page = async ({ params }: PageProps) => {
   return (
     <div>
       <DashboardPage title={`${category.emoji} ${category.name} events`}>
-        <EmptyCategoryState categoryName={category.name} />
+        <CategoryPageContent hasEvents={hasEvents} category={category} />
       </DashboardPage>
     </div>
   )

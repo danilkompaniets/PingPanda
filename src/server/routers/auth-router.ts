@@ -1,7 +1,8 @@
 import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
 import { router } from "../__internals/router"
-import { publicProcedure } from "../procedures"
+import { privateProcedure, publicProcedure } from "../procedures"
+import { z } from "zod"
 
 export const authRouter = router({
   getDatabaseSyncStatus: publicProcedure.query(async ({ c, ctx }) => {
@@ -27,6 +28,20 @@ export const authRouter = router({
     }
 
     return c.json({ isSynced: true })
+  }),
+
+  setDiscordId: privateProcedure.input(z.object({ discordId: z.string().max(20) })).mutation(async ({
+                                                                                                      c,
+                                                                                                      ctx,
+                                                                                                      input, }) => {
+    const { user } = ctx
+    const { discordId } = input
+
+    await db.user.update({
+      where: { id: user.id },
+      data: { discordId },
+    })
+    return c.json({ success: true })
   }),
 })
 
