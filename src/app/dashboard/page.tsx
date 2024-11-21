@@ -34,7 +34,7 @@ const Page = async () => {
             Add Category
           </Button>
         </CreateEventCategoryModal>
-      } title={"asdasd"}>
+      } title={"Dashboard"}>
         <DashboardPageContent />
       </DashboardPage>
     </div>
