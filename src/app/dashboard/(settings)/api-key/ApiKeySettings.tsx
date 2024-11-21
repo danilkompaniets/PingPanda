@@ -20,6 +20,7 @@ export const ApiKeySettings = ({ apiKey }: { apiKey: string }) => {
     <Card className={"max-w-xl"}>
       <div>
         <Label>
+
           Your api key
         </Label>
         <div className={"mt-1 relative"}>
